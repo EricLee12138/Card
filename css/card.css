@@ -1,5 +1,5 @@
 * {
-    transition: all 0.5s;
+    transition: all 0.75s;
     user-select: none;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
@@ -11,41 +11,41 @@
 }
 body {
     margin: 0;
-    background: url('../images/background.jpg');
+    background: url('../images/background-wide.jpg');
     background-attachment: fixed;
     background-size: cover;
 }
 header {
     text-align: center;
-    margin: 30px 0;
+    margin: 30px 0 10px 0;
 }
 section {
     border-radius: 10px;
 }
 h1 {
-    font-size: 60pt;
-    font-weight: 100;
-    margin: 30px 20px 10px 20px;
-    height: 70px;
-    line-height: 70px;
+    font-size: 80pt;
+    font-weight: 200;
+    margin: 5% 20px 2% 20px;
+    height: 100px;
+    line-height: 100px;
     color: #333333;
     letter-spacing: 5px;
 }
 p {
-    font-size: 13px;
-    margin: 0;
+    font-size: 15pt;
+    margin: 3% 20px 10px 20px;
     color: #333333;
 }
 #head-complete {
     display: inline-block;
     width: auto;
-    height: 20px;
+    height: 22px;
     border: solid 1px #333333;
     border-radius: 20px;
-    padding: 0 10px;
+    padding: 0 12px;
     margin: 5px;
-    font-size: 8pt;
-    line-height: 20px;
+    font-size: 10pt;
+    line-height: 23px;
     color: #333333;
 }
 #head-complete:active {
@@ -58,7 +58,7 @@ p {
     width: 70%;
     min-width: 375px;
     max-width: 600px;
-    margin: 30px 10px 30px calc(50%);
+    margin: 10px 10px 20px calc(50%);
     transform: translateX(-50%);
 }
 #search-bar {
@@ -96,7 +96,7 @@ p {
     height: 20px;
     border: solid 1px #333333;
     border-radius: 20px;
-    padding: 0 10px;
+    padding: 0 12px;
     margin: 5px;
     font-size: 8pt;
     line-height: 20px;
@@ -107,6 +107,7 @@ p {
     color: #cccccc;
 }
 #search-label span.selected {
+    background-color: #333333;
     border: solid 1px #333333;
     color: #cccccc;
 }
@@ -216,7 +217,7 @@ p {
     color: rgba(50,50,50,0.6);
     box-shadow: 0px 5px 20px 0.5px rgba(0, 0, 0, 0.059);
     z-index: 100;
-    transition: all 0.25s;
+    transition: all 0.5s;
     opacity: 0;
     overflow-x: hidden;
 }

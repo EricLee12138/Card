@@ -1,20 +1,37 @@
 'use strict';
 
+var test;
+
 (function() {
 
     var timeout;
+    var storageList;
 
     window.onload = function() {
-        document.getElementById('head-complete').onclick = function() {
+        if (window.innerWidth < 400) {
+            document.body.style.background = 'url(\'../images/background-mobile.jpg\')'
+            document.body.style.backgroundAttachment = 'fixed';
+            document.body.style.backgroundSize = 'cover';
+        } else if (window.innerWidth >= 400 && window.innerWidth < 1100) {
+            document.body.style.background = 'url(\'../images/background-mobile-wide.jpg\')'
+            document.body.style.backgroundAttachment = 'fixed';
+            document.body.style.backgroundSize = 'cover';
+        }
+
+        if (localStorage.storageList) {
+            loadLocalStorage(localStorage.storageList);
+        }
+
+        document.getElementById('head-complete').ontouchend = function() {
             clearCompleted();
         };
 
-        document.getElementById('item-new-folder').onclick = function() {
+        document.getElementById('item-new-folder').ontouchend = function() {
             addFolder(this.parentElement.parentElement.parentElement);
         };
 
         document.querySelectorAll('#search-label span').forEach(function(label) {
-            label.onclick = function() {
+            label.ontouchend = function() {
                 var all = this.parentElement.firstElementChild;
                 var active = all.nextElementSibling;
                 var completed = active.nextElementSibling;
@@ -25,6 +42,7 @@
                 this.classList.add('selected');
                 filterByLabel(this.id);
             };
+            label.onclick = label.ontouchend;
         });
 
         document.getElementById('bar-key').oninput = function() {
@@ -33,9 +51,7 @@
             timeout = setTimeout(function() {
                 if (keyword.length > 0) {
                     document.querySelectorAll('#search-label .selected').forEach(function(label) {
-                        if (label.id != 'label-all') {
-                            label.click();
-                        }
+                        label.click();
                     });
                     filterByKeyword(keyword.toLowerCase());
                 } else {
@@ -48,6 +64,7 @@
     };
 
     var filterByKeyword = function(word) {
+        console.log('search by ' + word);
         var list = document.getElementById('sec-list');
         var folder = list.firstElementChild;
 
@@ -58,10 +75,12 @@
             expandFolder(content);
             var item = content.firstElementChild;
             while (item) {
-                var itemName = item.firstElementChild.nextElementSibling.firstElementChild;
+                var itemContent = item.firstElementChild.nextElementSibling;
+                if (!itemContent) { break; }
+                var itemName = itemContent.firstElementChild;
                 if (!itemName.value.toLowerCase().includes(word)) {
                     item.classList.add('item-filtered');
-                } 
+                }
                 item = item.nextElementSibling;
             }
             folder = folder.nextElementSibling;
@@ -124,7 +143,7 @@
         }
     };
 
-    var addFolder = function(list) {
+    var addFolder = function(list, withname) {
         $(list).animate({ scrollTop: 0 }, 500);
 
         var del = document.createElement('div');
@@ -173,24 +192,30 @@
         $(list).prepend(folder);
         updateEventListener();
 
-        name.focus();
+        if (withname) {
+            name.value = withname;
+        } else {
+            name.focus();
+        }
+
+        return folder;
     };
 
     var deleteFolder = function(folder) {
-        var confirmDel = confirm('Do you want to delete the folder? \
-        The operation cannot be restored.');
+        var confirmDel = confirm('Do you want to delete the folder? ' +
+        'The operation cannot be restored.');
         if (confirmDel) {
             folder.remove();
         }
+
+        updateEventListener();
     };
 
-    var addItemToFolder = function(folder) {
-        var date = new Date();
+    var addItemToFolder = function(folder, options) {
         var itemTitle = document.createElement('input');
         var itemIntro = document.createElement('div');
         itemTitle.type = 'text';
         itemTitle.placeholder = 'New card item';
-        itemIntro.innerHTML = date.getHours() + ':' + date.getMinutes() + ' ' + date.toDateString();
         itemTitle.classList.add('item-title');
         itemIntro.classList.add('item-intro');
         
@@ -228,14 +253,32 @@
                 }
                 child = child.nextElementSibling;
             }
-            setTimeout(function() {
+
+            if (!options) {
+                setTimeout(function() {
+                    folderItem.classList.add('item-front');
+                    updateEventListener();
+                }, 100);
+            } else {
                 folderItem.classList.add('item-front');
                 updateEventListener();
-            }, 100);
+            }
         }
         $(folder).prepend(folderItem);
 
-        itemTitle.focus();
+        if (!options) {
+            var date = new Date();
+            itemTitle.focus();
+            itemIntro.innerHTML = date.getHours() + ':' + date.getMinutes() + ' ' + date.toDateString();
+        } else {
+            itemTitle.value = options.title;
+            itemIntro.innerHTML = options.time;
+            if (options.checked) {
+                itemCheck.classList.add('item-checked');
+                itemTitle.classList.add('item-checked');
+                itemIntro.classList.add('item-checked');
+            }
+        }
     };
 
     var deleteFolderItem = function(item) {
@@ -271,7 +314,7 @@
 
     var checkItem = function(check) {
         check.classList.add('item-checked');
-        check.onclick = function(e) {
+        check.ontouchend = function(e) {
             e.cancelBubble = true;
             uncheckItem(check);
         };
@@ -291,7 +334,7 @@
 
     var uncheckItem = function(check) {
         check.classList.remove('item-checked');
-        check.onclick = function(e) {
+        check.ontouchend = function(e) {
             e.cancelBubble = true;
             checkItem(check);
         };
@@ -375,7 +418,80 @@
         updateEventListener();
     };
 
+    var loadLocalStorage = function(json) {
+        var prevStorageList = JSON.parse(json);
+        var list = document.getElementById('sec-list');
+
+        console.log(prevStorageList);
+        for (var i = prevStorageList.length - 1; i >= 0 ; i--) {
+
+            var folderName = prevStorageList[i].name;
+            var folderItems = prevStorageList[i].items;
+            var folder = addFolder(list, folderName);
+
+            for (var j = folderItems.length - 1; j >= 0; j--) {
+                var itemChecked = folderItems[j].checked;
+                var itemTitle = folderItems[j].title;
+                var itemTime = folderItems[j].time;
+
+                addItemToFolder(folder.firstElementChild.nextElementSibling, {
+                    checked: itemChecked,
+                    title: itemTitle,
+                    time: itemTime
+                });
+            }
+        }
+    }
+
+    var updateLocalStorage = function() {
+        storageList = [];
+
+        var list = document.getElementById('sec-list');
+        var folder = list.firstElementChild;
+
+        while (folder) {
+            var storageFolder = {};
+
+            var info = folder.firstElementChild;
+            var content = info.nextElementSibling;
+            if (!content) { break; }
+            
+            var folderName = info.firstElementChild.nextElementSibling;
+
+            var storageItems = [];
+            var item = content.firstElementChild;
+            while (item) {
+                var itemChecked = item.firstElementChild;
+                
+                var itenInfo = itemChecked.nextElementSibling;
+                if (!itenInfo) {break;}
+                
+                var itemName = itenInfo.firstElementChild;
+                var itemTime = itemName.nextElementSibling;
+                
+                storageItems.push({
+                    checked: itemChecked.classList.contains('item-checked'),
+                    title: itemName.value,
+                    time: itemTime.innerHTML
+                });
+
+                item = item.nextElementSibling;
+            }
+
+            storageFolder = {
+                name: folderName.value,
+                items: storageItems
+            };
+            storageList.push(storageFolder);
+            folder = folder.nextElementSibling;
+        }
+
+        localStorage.setItem("storageList", JSON.stringify(storageList));
+    }
+
     var updateEventListener = function() {
+        // document.getElementById
+
         document.querySelectorAll('.folder-content').forEach(function(content) {
             if (!content.firstElementChild) {
                 var empty = document.createElement('div');
@@ -411,8 +527,8 @@
 
         document.querySelectorAll('.folder-delete').forEach(function(del) {
             var folder = del.parentElement.parentElement;
-            if (!del.onclick) {
-                del.onclick = function() {
+            if (!del.ontouchend) {
+                del.ontouchend = function() {
                     deleteFolder(folder);
                 };
             }
@@ -420,8 +536,8 @@
 
         document.querySelectorAll('.folder-item.item-add').forEach(function(add) {
             var folderContent = add.parentElement.nextElementSibling;
-            if (!add.onclick) {
-                add.onclick = function() {
+            if (!add.ontouchend) {
+                add.ontouchend = function() {
                     addItemToFolder(folderContent);
                 };
             }
@@ -429,22 +545,22 @@
 
         document.querySelectorAll('.folder-item.item-collapse').forEach(function(collapse) {
             var folderContent = collapse.parentElement.nextElementSibling;
-            if (!collapse.onclick) {
-                collapse.onclick = function() {
+            if (!collapse.ontouchend) {
+                collapse.ontouchend = function() {
                     collapseFolder(folderContent);
                 };
             }
             if (!folderContent.firstElementChild || folderContent.firstElementChild.classList.contains('item-front') || folderContent.firstElementChild.classList.contains('item-empty')) {
                 collapse.classList.add('item-hidden');
-                collapse.onclick = null;
+                collapse.ontouchend = null;
             } else {
                 collapse.classList.remove('item-hidden');
             }
         });
 
         document.querySelectorAll('.folder-item.item-front').forEach(function(front) {
-            if (!front.onclick) {
-                front.onclick = function(e) {
+            if (!front.ontouchend) {
+                front.ontouchend = function(e) {
                     e.cancelBubble = true;  
                     expandFolder(front.parentElement);
                 };
@@ -452,17 +568,21 @@
         });
 
         document.querySelectorAll('.item-check').forEach(function(check) {
-            if (!check.onclick) {
-                check.onclick = function(e) {
+            if (!check.ontouchend) {
+                check.ontouchend = function(e) {
                     e.cancelBubble = true;  
-                    checkItem(check);
+                    if (check.classList.contains('item-checked')) {
+                        uncheckItem(check);
+                    } else {
+                        checkItem(check);
+                    }
                 };
             }
         });
 
         document.querySelectorAll('.item-delete').forEach(function(del) {
-            if (!del.onclick) {
-                del.onclick = function(e) {
+            if (!del.ontouchend) {
+                del.ontouchend = function(e) {
                     e.cancelBubble = true;  
                     deleteFolderItem(del.parentElement);
                 };
@@ -471,8 +591,8 @@
 
         document.querySelectorAll('.item-clear').forEach(function(clear) {
             var folderContent = clear.parentElement.nextElementSibling;
-            if (!clear.onclick) {
-                clear.onclick = function(e) {
+            if (!clear.ontouchend) {
+                clear.ontouchend = function(e) {
                     e.cancelBubble = true;  
                     clearFolder(clear.parentElement.nextElementSibling);
                 };
@@ -480,7 +600,7 @@
             if (!folderContent.firstElementChild ||
                 folderContent.firstElementChild.classList.contains('item-empty')) {
                 clear.classList.add('item-hidden');
-                clear.onclick = null;
+                clear.ontouchend = null;
             } else {
                 clear.classList.remove('item-hidden');
             }
@@ -488,8 +608,8 @@
 
         document.querySelectorAll('.folder-info input, .item-content input').forEach(
             function(input) {
-                if (!input.onclick) {
-                    input.onclick = function(e) {
+                if (!input.ontouchend) {
+                    input.ontouchend = function(e) {
                         e.cancelBubble = true;  
                     };
                 }
@@ -505,10 +625,13 @@
                                 }
                             }
                         );
+                        updateLocalStorage();
                     };
                 }
             }
         );
+
+        updateLocalStorage();
     };
 
 })();
