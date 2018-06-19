@@ -22,16 +22,16 @@ var test;
             loadLocalStorage(localStorage.storageList);
         }
 
-        document.getElementById('head-complete').ontouchend = function() {
+        document.getElementById('head-complete').ontouchend = document.getElementById('head-complete').onclick = function() {
             clearCompleted();
         };
 
-        document.getElementById('item-new-folder').ontouchend = function() {
+        document.getElementById('item-new-folder').ontouchend = document.getElementById('item-new-folder').onclick = function() {
             addFolder(this.parentElement.parentElement.parentElement);
         };
 
         document.querySelectorAll('#search-label span').forEach(function(label) {
-            label.ontouchend = function() {
+            label.ontouchend = label.onclick = function() {
                 var all = this.parentElement.firstElementChild;
                 var active = all.nextElementSibling;
                 var completed = active.nextElementSibling;
@@ -313,7 +313,7 @@ var test;
 
     var checkItem = function(check) {
         check.classList.add('item-checked');
-        check.ontouchend = function(e) {
+        check.ontouchend = check.onclick = function(e) {
             e.cancelBubble = true;
             uncheckItem(check);
         };
@@ -333,7 +333,7 @@ var test;
 
     var uncheckItem = function(check) {
         check.classList.remove('item-checked');
-        check.ontouchend = function(e) {
+        check.ontouchend = check.onclick = function(e) {
             e.cancelBubble = true;
             checkItem(check);
         };
@@ -527,7 +527,7 @@ var test;
         document.querySelectorAll('.folder-delete').forEach(function(del) {
             var folder = del.parentElement.parentElement;
             if (!del.ontouchend) {
-                del.ontouchend = function() {
+                del.ontouchend = del.onclick = function() {
                     deleteFolder(folder);
                 };
             }
@@ -536,7 +536,7 @@ var test;
         document.querySelectorAll('.folder-item.item-add').forEach(function(add) {
             var folderContent = add.parentElement.nextElementSibling;
             if (!add.ontouchend) {
-                add.ontouchend = function() {
+                add.ontouchend = add.onclick = function() {
                     addItemToFolder(folderContent);
                 };
             }
@@ -545,13 +545,13 @@ var test;
         document.querySelectorAll('.folder-item.item-collapse').forEach(function(collapse) {
             var folderContent = collapse.parentElement.nextElementSibling;
             if (!collapse.ontouchend) {
-                collapse.ontouchend = function() {
+                collapse.ontouchend = collapse.onclick = function() {
                     collapseFolder(folderContent);
                 };
             }
             if (!folderContent.firstElementChild || folderContent.firstElementChild.classList.contains('item-front') || folderContent.firstElementChild.classList.contains('item-empty')) {
                 collapse.classList.add('item-hidden');
-                collapse.ontouchend = null;
+                collapse.ontouchend = collapse.onclick = null;
             } else {
                 collapse.classList.remove('item-hidden');
             }
@@ -559,7 +559,7 @@ var test;
 
         document.querySelectorAll('.folder-item.item-front').forEach(function(front) {
             if (!front.ontouchend) {
-                front.ontouchend = function(e) {
+                front.ontouchend = front.onclick = function(e) {
                     e.cancelBubble = true;  
                     expandFolder(front.parentElement);
                 };
@@ -568,7 +568,7 @@ var test;
 
         document.querySelectorAll('.item-check').forEach(function(check) {
             if (!check.ontouchend) {
-                check.ontouchend = function(e) {
+                check.ontouchend = check.onclick = function(e) {
                     e.cancelBubble = true;  
                     if (check.classList.contains('item-checked')) {
                         uncheckItem(check);
@@ -581,7 +581,7 @@ var test;
 
         document.querySelectorAll('.item-delete').forEach(function(del) {
             if (!del.ontouchend) {
-                del.ontouchend = function(e) {
+                del.ontouchend = del.onclick = function(e) {
                     e.cancelBubble = true;  
                     deleteFolderItem(del.parentElement);
                 };
@@ -591,7 +591,7 @@ var test;
         document.querySelectorAll('.item-clear').forEach(function(clear) {
             var folderContent = clear.parentElement.nextElementSibling;
             if (!clear.ontouchend) {
-                clear.ontouchend = function(e) {
+                clear.ontouchend = clear.onclick = function(e) {
                     e.cancelBubble = true;  
                     clearFolder(clear.parentElement.nextElementSibling);
                 };
@@ -599,7 +599,7 @@ var test;
             if (!folderContent.firstElementChild ||
                 folderContent.firstElementChild.classList.contains('item-empty')) {
                 clear.classList.add('item-hidden');
-                clear.ontouchend = null;
+                clear.ontouchend = clear.onclick = null;
             } else {
                 clear.classList.remove('item-hidden');
             }
@@ -608,7 +608,7 @@ var test;
         document.querySelectorAll('.folder-info input, .item-content input').forEach(
             function(input) {
                 if (!input.ontouchend) {
-                    input.ontouchend = function(e) {
+                    input.ontouchend = input.onclick = function(e) {
                         e.cancelBubble = true;  
                     };
                 }

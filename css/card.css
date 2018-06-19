@@ -227,7 +227,7 @@ p {
     border: solid 1px;
     border-radius: 25px;
     float: left;
-    margin: 37.5px 10px;
+    margin: 36.5px 10px;
 }
 .item-check:active {
     background-color: rgba(50,50,50,0.9);
