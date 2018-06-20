@@ -315,6 +315,7 @@ p {
     background: rgba(200, 200, 200, 0.9);
 }
 .item-intro {
+    width: 190px;
     font-size: medium;
     height: 30px;
     padding-left: 10px;

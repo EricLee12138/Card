@@ -480,7 +480,7 @@ var test;
             var content = info.nextElementSibling;
             if (!content) { break; }
             
-            var folderName = info.firstElementChild.nextElementSibling;
+            var folderName = info.firstElementChild.nextElementSibling.nextElementSibling;
 
             var storageItems = [];
             var item = content.firstElementChild;
