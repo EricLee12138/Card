@@ -1,5 +1,15 @@
+/*--------------------------------------------------------------------
+Basic Style Sheet (for the main page)
+
+author:     Eric
+email:      ericlee12138@outlook.com
+website:    https://ericlee12138.github.io/ericlee.github.io/
+----------------------------------------------------------------------*/
+
+/* Styles for browser default elements
+--------------------------------------------------------------------*/
 * {
-    transition: all 0.75s;
+    transition: all 0.5s;
     user-select: none;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
@@ -11,10 +21,7 @@
 }
 body {
     margin: 0;
-    background-color: #cccccc;
-    background: url('../images/background-wide.jpg');
-    background-attachment: fixed;
-    background-size: cover;
+    background-color: #dddddd;
 }
 header {
     text-align: center;
@@ -37,6 +44,11 @@ p {
     margin: 3% 20px 10px 20px;
     color: #333333;
 }
+
+/* Styles for elements with customed id and/or class
+--------------------------------------------------------------------*/
+/* 1. Header
+----------------------------------*/
 #head-complete {
     display: inline-block;
     width: auto;
@@ -53,7 +65,8 @@ p {
     background-color: #333333;
     color: #cccccc;
 }
-
+/* 2. Search section
+----------------------------------*/
 #sec-search {
     height: 100px;
     width: 70%;
@@ -112,7 +125,8 @@ p {
     border: solid 1px #333333;
     color: #cccccc;
 }
-
+/* 2. List section
+----------------------------------*/
 #sec-list {
     width: 70%;
     min-width: 375px;
@@ -141,10 +155,30 @@ p {
     font-size: 17pt;
     font-weight: 200;
     border-radius: 30px;
-    transform: translateX(-20px) rotate(45deg);
+    transform: translateX(-25px) rotate(45deg);
 }
 .folder-delete:active {
     color: #ff0000;
+}
+.folder-check {
+    width: 20px;
+    height: 20px;
+    border: double 4px;
+    border-radius: 25px;
+    float: left;
+    margin: 1px 10px;
+}
+.folder-check:active {
+    background-color: rgba(50,50,50,0.9);
+}
+.folder-checked {
+    text-decoration: line-through;
+}
+.folder-check.folder-checked {
+    background-color: rgba(50,50,50,0.9);
+}
+.folder-check.folder-checked:active {
+    background-color: rgba(50,50,50,0.5);
 }
 .folder-name {
     display: inline-block;
@@ -364,8 +398,6 @@ p {
 }
 .folder-item.item-filtered {
     height: 10px;
-    /* margin-top: 0;
-    margin-bottom: 0; */
 }
 .folder-item.item-btn.item-hidden {
     opacity: 0.3;

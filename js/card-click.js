@@ -8,16 +8,6 @@ var test;
     var storageList;
 
     window.onload = function() {
-        if (window.innerWidth < 400) {
-            document.body.style.background = 'url(\'../images/background-mobile.jpg\')'
-            document.body.style.backgroundAttachment = 'fixed';
-            document.body.style.backgroundSize = 'cover';
-        } else if (window.innerWidth >= 400 && window.innerWidth < 1100) {
-            document.body.style.background = 'url(\'../images/background-mobile-wide.jpg\')'
-            document.body.style.backgroundAttachment = 'fixed';
-            document.body.style.backgroundSize = 'cover';
-        }
-
         if (localStorage.storageList) {
             loadLocalStorage(localStorage.storageList);
         }
@@ -149,6 +139,9 @@ var test;
         del.classList.add('folder-delete');
         del.innerHTML = '+';
 
+        var check = document.createElement('div');
+        check.classList.add('folder-check');
+
         var name = document.createElement('input');
         name.classList.add('folder-name');
         name.placeholder = 'New Folder';
@@ -166,6 +159,7 @@ var test;
         var folderInfo = document.createElement('div');
         folderInfo.classList.add('folder-info');
         folderInfo.appendChild(del);
+        folderInfo.appendChild(check);
         folderInfo.appendChild(name);
         folderInfo.appendChild(collapse);
         folderInfo.appendChild(clear);
@@ -442,6 +436,36 @@ var test;
         }
     }
 
+    var updateSummary = function() {
+        var list = document.getElementById('sec-list');
+        var folder = list.firstElementChild;
+        var numDone = 0, numLeft = 0;
+
+        while (folder) {
+            var content = folder.firstElementChild.nextElementSibling;
+            if (!content) { break; }
+
+            var item = content.firstElementChild;
+            while (item) {
+                if (item.firstElementChild.classList.contains('item-check')) {
+                    if (item.firstElementChild.classList.contains('item-checked')) {
+                        numDone++;
+                    } else {
+                        numLeft++;
+                    }
+                }
+                item = item.nextElementSibling;
+            }
+            folder = folder.nextElementSibling;
+        }
+
+        document.getElementById('head-summary').innerHTML = 
+        (numLeft == 0 ? 'No' : numLeft) +
+        (numLeft > 1 ? ' items' : ' item') + ' left and ' +
+        (numDone == 0 ? 'no' : numDone) +
+        (numDone > 1 ? ' items' : ' item') +' done.';
+    }
+
     var updateLocalStorage = function() {
         storageList = [];
 
@@ -489,7 +513,7 @@ var test;
     }
 
     var updateEventListener = function() {
-        // document.getElementById
+        updateSummary();
 
         document.querySelectorAll('.folder-content').forEach(function(content) {
             if (!content.firstElementChild) {
@@ -531,6 +555,38 @@ var test;
                     deleteFolder(folder);
                 };
             }
+        });
+
+        document.querySelectorAll('.folder-check').forEach(function(check) {
+            var content = check.parentElement.nextElementSibling;
+            if (!check.ontouchend) {
+                check.ontouchend = check.onclick = function() {
+                    if (check.classList.contains('folder-checked')) {
+                        check.classList.remove('folder-checked');
+                        var child = content.firstElementChild;
+                        while (child) {
+                            uncheckItem(child.firstElementChild);
+                            child = child.nextElementSibling;
+                        }
+                    } else {
+                        check.classList.add('folder-checked');
+                        var child = content.firstElementChild;
+                        while (child) {
+                            checkItem(child.firstElementChild);
+                            child = child.nextElementSibling;
+                        }
+                    }
+                };
+            }
+            var child = content.firstElementChild;
+            while (child) {
+                if (!child.firstElementChild.classList.contains('item-checked')) {
+                    check.classList.remove('folder-checked');
+                    return;
+                }
+                child = child.nextElementSibling;
+            }            
+            check.classList.add('folder-checked');
         });
 
         document.querySelectorAll('.folder-item.item-add').forEach(function(add) {

@@ -149,6 +149,9 @@ var test;
         del.classList.add('folder-delete');
         del.innerHTML = '+';
 
+        var check = document.createElement('div');
+        check.classList.add('folder-check');
+
         var name = document.createElement('input');
         name.classList.add('folder-name');
         name.placeholder = 'New Folder';
@@ -166,6 +169,7 @@ var test;
         var folderInfo = document.createElement('div');
         folderInfo.classList.add('folder-info');
         folderInfo.appendChild(del);
+        folderInfo.appendChild(check);
         folderInfo.appendChild(name);
         folderInfo.appendChild(collapse);
         folderInfo.appendChild(clear);
@@ -421,7 +425,6 @@ var test;
         var prevStorageList = JSON.parse(json);
         var list = document.getElementById('sec-list');
 
-        console.log(prevStorageList);
         for (var i = prevStorageList.length - 1; i >= 0 ; i--) {
 
             var folderName = prevStorageList[i].name;
@@ -440,6 +443,36 @@ var test;
                 });
             }
         }
+    }
+
+    var updateSummary = function() {
+        var list = document.getElementById('sec-list');
+        var folder = list.firstElementChild;
+        var numDone = 0, numLeft = 0;
+
+        while (folder) {
+            var content = folder.firstElementChild.nextElementSibling;
+            if (!content) { break; }
+
+            var item = content.firstElementChild;
+            while (item) {
+                if (item.firstElementChild.classList.contains('item-check')) {
+                    if (item.firstElementChild.classList.contains('item-checked')) {
+                        numDone++;
+                    } else {
+                        numLeft++;
+                    }
+                }
+                item = item.nextElementSibling;
+            }
+            folder = folder.nextElementSibling;
+        }
+
+        document.getElementById('head-summary').innerHTML = 
+        (numLeft == 0 ? 'No' : numLeft) +
+        (numLeft > 1 ? ' items' : ' item') + ' left and ' +
+        (numDone == 0 ? 'no' : numDone) +
+        (numDone > 1 ? ' items' : ' item') +' done.';
     }
 
     var updateLocalStorage = function() {
@@ -489,7 +522,7 @@ var test;
     }
 
     var updateEventListener = function() {
-        // document.getElementById
+        updateSummary();
 
         document.querySelectorAll('.folder-content').forEach(function(content) {
             if (!content.firstElementChild) {
@@ -531,6 +564,38 @@ var test;
                     deleteFolder(folder);
                 };
             }
+        });
+
+        document.querySelectorAll('.folder-check').forEach(function(check) {
+            var content = check.parentElement.nextElementSibling;
+            if (!check.ontouchend) {
+                check.ontouchend = function() {
+                    if (check.classList.contains('folder-checked')) {
+                        check.classList.remove('folder-checked');
+                        var child = content.firstElementChild;
+                        while (child) {
+                            uncheckItem(child.firstElementChild);
+                            child = child.nextElementSibling;
+                        }
+                    } else {
+                        check.classList.add('folder-checked');
+                        var child = content.firstElementChild;
+                        while (child) {
+                            checkItem(child.firstElementChild);
+                            child = child.nextElementSibling;
+                        }
+                    }
+                };
+            }
+            var child = content.firstElementChild;
+            while (child) {
+                if (!child.firstElementChild.classList.contains('item-checked')) {
+                    check.classList.remove('folder-checked');
+                    return;
+                }
+                child = child.nextElementSibling;
+            }            
+            check.classList.add('folder-checked');
         });
 
         document.querySelectorAll('.folder-item.item-add').forEach(function(add) {
