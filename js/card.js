@@ -8,16 +8,6 @@ var test;
     var storageList;
 
     window.onload = function() {
-        if (window.innerWidth < 400) {
-            document.body.style.background = 'url(\'../images/background-mobile.jpg\')'
-            document.body.style.backgroundAttachment = 'fixed';
-            document.body.style.backgroundSize = 'cover';
-        } else if (window.innerWidth >= 400 && window.innerWidth < 1100) {
-            document.body.style.background = 'url(\'../images/background-mobile-wide.jpg\')'
-            document.body.style.backgroundAttachment = 'fixed';
-            document.body.style.backgroundSize = 'cover';
-        }
-
         if (localStorage.storageList) {
             loadLocalStorage(localStorage.storageList);
         }
@@ -31,7 +21,7 @@ var test;
         };
 
         document.querySelectorAll('#search-label span').forEach(function(label) {
-            label.ontouchend = function() {
+            label.ontouchend = label.onclick = function() {
                 var all = this.parentElement.firstElementChild;
                 var active = all.nextElementSibling;
                 var completed = active.nextElementSibling;
@@ -45,9 +35,11 @@ var test;
         });
 
         document.getElementById('bar-key').oninput = function() {
+            var keyBar = this;
             var keyword = this.value;
             clearTimeout(timeout);
             timeout = setTimeout(function() {
+                keyBar.blur();
                 if (keyword.length > 0) {
                     document.querySelectorAll('#search-label .selected').forEach(function(label) {
                         label.click();

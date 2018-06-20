@@ -166,7 +166,7 @@ p {
     border: double 4px;
     border-radius: 25px;
     float: left;
-    margin: 1px 10px;
+    margin: 1px 0;
 }
 .folder-check:active {
     background-color: rgba(50,50,50,0.9);
@@ -184,14 +184,16 @@ p {
     display: inline-block;
     width: 35%;
     height: 30px;
-    padding: 0 10px;
+    padding: 0 8px;
+    transform: translateX(10px);
     line-height: 30px;
     color: #555555;
-    font-size: 18px;
+    font-size: 17px;
     border-radius: 10px;
     border: none;
     background: none;
     outline: none;
+    max-width: 100px;
 }
 .folder-name:active, .folder-name:focus {
     background: rgba(200, 200, 200, 0.9);
@@ -202,7 +204,7 @@ p {
     width: auto;
     height: 20px;
     line-height: 20px;
-    padding: 0 10px;
+    padding: 0 7px;
     border: solid 1px #333333;
     background: transparent;
     border-radius: 20px;

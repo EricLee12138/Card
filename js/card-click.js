@@ -35,9 +35,11 @@ var test;
         });
 
         document.getElementById('bar-key').oninput = function() {
+            var keyBar = this;
             var keyword = this.value;
             clearTimeout(timeout);
             timeout = setTimeout(function() {
+                keyBar.blur();
                 if (keyword.length > 0) {
                     document.querySelectorAll('#search-label .selected').forEach(function(label) {
                         label.click();
