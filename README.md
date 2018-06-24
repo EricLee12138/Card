@@ -1,5 +1,13 @@
 # Card To Do List 简介
 
+## 使用方法
+
+- 可直接手机访问已部署在 Github 上的[网址](https://ericlee12138.github.io/Card/)，或扫描二维码
+  <div align="center">
+    <img src="https://ws4.sinaimg.cn/large/006tKfTcly1fsm49csadhj307s07sq2p.jpg" width="30%">
+  </div>
+- 也可下载整个项目后在本地搭建服务器运行
+
 ## 基本功能
 
 - 单个事项的添加、删除、完成、取消完成和删除
