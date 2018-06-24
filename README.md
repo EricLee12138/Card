@@ -16,7 +16,7 @@
 
 ## 程序截图
 
-![](https://ws3.sinaimg.cn/large/006tNc79gy1fshz8dphmyj30ku112wgv.jpg)
+<img src="https://ws3.sinaimg.cn/large/006tNc79gy1fshz8dphmyj30ku112wgv.jpg" width="30%">
 
 ![](https://ws4.sinaimg.cn/large/006tNc79gy1fshz8ddw1vj30ku112tbc.jpg)
 
