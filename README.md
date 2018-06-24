@@ -8,8 +8,8 @@
     <img src="https://ws4.sinaimg.cn/large/006tKfTcly1fsm49csadhj307s07sq2p.jpg" width="15%">
   </div>
   
-- 也可下载整个项目后在本地搭建服务器运行
-访问
+- 也可下载整个项目后在本地搭建服务器运行访问
+
 ## 基本功能
 
 - 单个事项的添加、删除、完成、取消完成和删除
