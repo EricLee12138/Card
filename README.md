@@ -2,7 +2,7 @@
 
 ## 使用方法
 
-- 可直接手机访问已部署在 Github 上的[网址](https://ericlee12138.github.io/Card/)，或扫描二维码
+- 可直接手机（电脑端访问需要下载项目后将引用的仅适配移动端的 `card-click.js` 文件调整为适配电脑的 `card.js` ）访问已部署在 Github 上的[网址](https://ericlee12138.github.io/Card/)，或扫描二维码
   <div align="center">
     <img src="https://ws4.sinaimg.cn/large/006tKfTcly1fsm49csadhj307s07sq2p.jpg" width="30%">
   </div>
